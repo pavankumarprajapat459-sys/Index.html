@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>मेरा किराना स्टोर</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+    header { background: green; color: white; padding: 15px; text-align: center; font-size: 24px; }
+    .container { width: 90%; margin: auto; padding: 20px; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .product { background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .product h3 { margin: 10px 0; }
+    button { background: green; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: darkgreen; }
+    #cart { margin-top: 30px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input, textarea { width: 100%; margin: 5px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <header>🛒 मेरा ऑनलाइन किराना स्टोर</header>
+
+  <div class="container">
+    <h2>उपलब्ध प्रोडक्ट</h2>
+    <div class="products" id="products"></div>
+
+    <div id="cart">
+      <h2>🛍 आपका कार्ट</h2>
+      <ul id="cartItems"></ul>
+      <p><b>कुल: ₹<span id="total">0</span></b></p>
+      
+      <h3>ऑर्डर कन्फ़र्म करें</h3>
+      <form id="orderForm">
+        <input type="text" id="name" placeholder="नाम" required>
+        <textarea id="address" placeholder="पता" required></textarea>
+        <input type="tel" id="phone" placeholder="मोबाइल नंबर" required>
+        <button type="submit">ऑर्डर करें</button>
+      </form>
+      <p id="orderMessage" style="color:green; font-weight:bold;"></p>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      { name: "चावल 1Kg", price: 60 },
+      { name: "गेहूं का आटा 5Kg", price: 220 },
+      { name: "दाल 1Kg", price: 120 },
+      { name: "तेल 1L", price: 150 },
+      { name: "चीनी 1Kg", price: 45 }
+    ];
+
+    let cart = [];
+
+    const productDiv = document.getElementById("products");
+    const cartItems = document.getElementById("cartItems");
+    const totalSpan = document.getElementById("total");
+    const orderForm = document.getElementById("orderForm");
+    const orderMessage = document.getElementById("orderMessage");
+
+    // प्रोडक्ट दिखाएँ
+    products.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `<h3>${p.name}</h3><p>₹${p.price}</p><button onclick="addToCart(${i})">Add to Cart</button>`;
+      productDiv.appendChild(div);
+    });
+
+    // कार्ट में जोड़ें
+    function addToCart(i) {
+      cart.push(products[i]);
+      showCart();
+    }
+
+    // कार्ट दिखाएँ
+    function showCart() {
+      cartItems.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, i) => {
+        total += item.price;
+        cartItems.innerHTML += `<li>${item.name} - ₹${item.price}</li>`;
+      });
+      totalSpan.textContent = total;
+    }
+
+    // ऑर्डर कन्फ़र्म
+    orderForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      if(cart.length === 0){
+        alert("पहले कुछ प्रोडक्ट चुनें!");
+        return;
+      }
+      orderMessage.textContent = "✅ आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!";
+      cart = [];
+      showCart();
+      orderForm.reset();
+    });
+  </script>
+
+</body>
+</html>
